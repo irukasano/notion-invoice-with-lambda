@@ -50,7 +50,7 @@ AWS Lambda により請求書 PDF を自動生成し S3 へ保存し、
 
 ## 1.4 構成技術
 
-- 実行基盤：AWS Lambda（Go / ZIP デプロイ）
+- 実行基盤：AWS Lambda（Go1.25 / ZIP デプロイ）
 - PDF 生成：GoFPDF（テキストレイヤー）＋ pdftk（テンプレ PDF との合成）
   - 日本語フォント：IPAexGothic を GoFPDF に埋め込み
 - API 連携：
