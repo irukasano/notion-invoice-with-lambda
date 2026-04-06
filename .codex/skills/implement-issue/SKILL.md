@@ -1,0 +1,83 @@
+---
+name: implement-issue
+description: Orchestrate end-to-end implementation for issue#N in this repository using docs/HLD.md as the source of truth. Use when the user asks to implement an issue with subtask decomposition, HLD-based integration tests, iterative review, and one final PR from the issue branch.
+---
+
+# Implement Issue
+
+このスキルは issue 全体を親オーケストレータとして進める。
+標準運用は `final-only` で、subtask ごとの PR は作らず、最後に issue branch から 1 本だけ PR を作る。
+
+## 入力
+
+- `issue#<番号>` を必須入力とする
+- 明示がない限り `pr_mode=final-only` とする
+- branch 命名は `issue/<番号>` と `issue/<番号>/task/<slug>` を使う
+
+## 必須参照
+
+1. ユーザーの最新指示
+2. `AGENTS.md`
+3. `docs/ARCHITECTURES.md`
+4. `docs/HLD.md`
+5. `ai/tasks/*.md`
+6. GitHub issue
+7. 既存コード
+
+## 停止条件
+
+- HLD と issue が矛盾する
+- feature-level integration test の期待値が HLD から一意に定まらない
+- subtask の分け方で設計差分が大きい
+- セキュリティや運用権限の前提が変わる
+- `stacked PR` へ切り替える必要がある
+
+上記では、曖昧点・選択肢・推奨案を整理して人間に確認する。
+推測で仕様を追加しない。
+
+## 標準フロー
+
+1. `plan-issue` を使い、issue と HLD から subtask を定義する
+2. `create-feature-test` を使い、issue branch に HLD ベースの feature-level integration test を追加する
+3. subtask ごとに task branch を切る
+4. 各 subtask で `create-subtask-test` を使って red テストを作る
+5. 各 subtask で `implement-from-test` を使って green にする
+6. 各 subtask で `review-subtask` を使って HLD 適合性・security・performance を確認する
+7. review 指摘のうちテスト化できるものは red テストへ戻し、実装とレビューを反復する
+8. 各 subtask で `finalize-subtask` を使い、branch を issue branch へ戻せる状態に整える
+9. subtask 完了後は task branch で commit し、issue branch へ取り込む
+10. 全 subtask 完了後に feature-level integration test と issue 全体レビューを実行する
+11. 問題がなければ issue branch で commit し、最後に 1 本だけ PR を作る
+
+## 判定ルール
+
+- `subtask green` は、その subtask 用テストと関連回帰テストが green の状態を指す
+- `issue green` は、feature-level integration test を含めて green の状態を指す
+- feature-level integration test が最後まで red のままでも、subtask green の判定には使わない
+- review 指摘は `HLD` 違反、`security`、`performance` の順で優先する
+
+## Git / PR ルール
+
+- 標準は `final-only`
+- subtask ごとの PR は明示指示がある場合か、長期化・広範囲変更・早期レビュー需要がある場合だけ使う
+- PR を作れない環境でも止まらないよう、最低限 commit までで区切れる構成にする
+- GitHub 認証が未設定なら、PR 作成は最後に保留事項として明示する
+
+## エージェントの使い分け
+
+- 分解は `issue-planner`
+- feature test と subtask red テスト設計は `test-designer`
+- 実装は `implementer`
+- 観点レビューは `reviewer`
+- subtask の仕上げと issue 全体の最終統合は `final-integrator`
+
+## 記録
+
+- 計画と進捗は `ai/tasks/todo.md`
+- 実装補助メモは `ai/tasks/readme.md`
+- ユーザーから新しい恒久ルールを受けた場合だけ `ai/tasks/lesson.md`
+
+## 典型プロンプト
+
+- `@implement issue#1 を実装して`
+- `@implement issue#4 を final-only で進めて`

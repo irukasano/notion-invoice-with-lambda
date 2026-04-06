@@ -7,3 +7,6 @@
 - `ai/tasks/todo.md` は毎回作り直さず、issue ごとにセクションを分けて追記する
 - 各 issue セクション内では、必要に応じて session 単位の小見出しを切る
 - Review や検証結果は issue 単位で `ai/tasks/todo.md` に残す
+- `.codex/agents/*/config.toml` は受理されるキーだけを使い、未確認の設定項目を推測で追加しない
+- agent role の指示本文キーは `system_prompt` ではなく `developer_instructions` を使う
+- 用語は `issue = GitHub issue`、`subtask = issue を分解した作業単位` に統一する
