@@ -15,4 +15,4 @@
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定し、issue は `issue-<番号>`、subtask は `issue-<番号>-<subtask-slug>` に統一する
 - commit 1 行目は `<refs|fixes> #<ISSUE_NO> <要約>` とし、issue 完了時だけ `fixes #<ISSUE_NO>` を使う
 - commit body は空行のあと `*` 箇条書きで `git diff` ベースに書く
-- PR title は `<要約> #<ISSUE_NO>`、PR description は `fixes #<ISSUE_NO>` + `## Summary` `## Changes` `## Comment` に固定する
+- PR title は `#<ISSUE_NO> <要約>`、PR description は `fixes #<ISSUE_NO>` + `## Summary` `## Changes` `## Comment` に固定する

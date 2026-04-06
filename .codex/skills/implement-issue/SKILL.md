@@ -98,7 +98,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 
 ## PR ルール
 
-- PR title は `<要約> #<ISSUE_NO>` の形式に固定する
+- PR title は `#<ISSUE_NO> <要約>` の形式に固定する
 - PR description は次の形式に固定する
 
 ```md
