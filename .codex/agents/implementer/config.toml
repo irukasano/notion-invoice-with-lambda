@@ -1,6 +1,7 @@
 name = "implementer"
 description = "failing test を満たす最小差分の実装を行う"
 model = "gpt-5.4"
+sandbox_mode = "workspace-write"
 
 developer_instructions = """
 あなたは subtask 実装専任エージェントです。

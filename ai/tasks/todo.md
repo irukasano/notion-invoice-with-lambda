@@ -30,6 +30,9 @@
 - `config.toml` の構文検証を `python3` で試したが、環境が Python 3.9 かつ `tomli` 未導入のため TOML パーサ検証は未実施
 - 用語は `issue = GitHub issue`、`subtask = issue を分解した作業単位` に統一する
 - agents 側の `developer_instructions` に参照する skill を明記する
+- `final-only` の完了条件を commit ではなく PR 作成完了までに修正する
+- issue branch / subtask branch の作業は `git worktree` 前提に修正する
+- worktree path 規約を `../notion-invoice-with-lambda-worktrees/issue-<番号>` と `../notion-invoice-with-lambda-worktrees/issue-<番号>-<subtask-slug>` に固定する
 
 ## 2026-04-06 issue #1 実装
 

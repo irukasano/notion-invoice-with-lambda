@@ -10,3 +10,6 @@
 - `.codex/agents/*/config.toml` は受理されるキーだけを使い、未確認の設定項目を推測で追加しない
 - agent role の指示本文キーは `system_prompt` ではなく `developer_instructions` を使う
 - 用語は `issue = GitHub issue`、`subtask = issue を分解した作業単位` に統一する
+- `final-only` 運用では commit だけで完了扱いにせず、最終 PR 作成までを完了条件として明記する
+- issue branch と subtask branch の並行作業は `git worktree` 前提で設計し、同一 worktree で branch を往復しない
+- worktree root は `../notion-invoice-with-lambda-worktrees` に固定し、issue は `issue-<番号>`、subtask は `issue-<番号>-<subtask-slug>` に統一する

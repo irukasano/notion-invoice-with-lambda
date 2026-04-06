@@ -23,6 +23,8 @@ description: Plan issue#N implementation in this repository from docs/HLD.md and
 - issue branch 用の実行計画
 - subtask 一覧と受け入れ条件
 - HLD ベースの feature-level integration test の観点
+- issue worktree と subtask worktree の切り方
+- worktree root と命名規約
 - 未確定事項と確認要否
 
 ## ワークフロー
@@ -32,8 +34,10 @@ description: Plan issue#N implementation in this repository from docs/HLD.md and
 3. HLD を起点に feature-level の期待振る舞いを列挙する
 4. 期待振る舞いを subtask に分解する
 5. subtask ごとに境界、依存、完了条件を明文化する
-6. `create-feature-test` で固定すべき観点を明文化する
-7. `ai/tasks/todo.md` に計画を記録する
+6. worktree root `../notion-invoice-with-lambda-worktrees` 配下の配置を決める
+7. issue worktree と subtask worktree の対応を決める
+8. `create-feature-test` で固定すべき観点を明文化する
+9. `ai/tasks/todo.md` に計画を記録する
 
 ## 分解ルール
 
@@ -41,6 +45,7 @@ description: Plan issue#N implementation in this repository from docs/HLD.md and
 - 複数コンポーネントに跨っても、期待振る舞いが 1 つなら 1 subtask としてよい
 - `土台の整理` と `業務仕様の追加` を混ぜない
 - feature-level integration test の期待値は HLD を根拠に固定し、現在実装から逆算しない
+- subtask slug は短い kebab-case に固定する
 
 ## 注意
 

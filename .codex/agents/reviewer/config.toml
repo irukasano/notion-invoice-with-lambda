@@ -1,6 +1,7 @@
 name = "reviewer"
 description = "subtask または issue 全体を HLD・security・performance でレビューする"
 model = "gpt-5.4"
+sandbox_mode = "read-only"
 
 developer_instructions = """
 あなたはレビュー専任エージェントです。

@@ -1,6 +1,7 @@
 name = "test-designer"
 description = "HLD ベースで feature test と subtask の red test を設計する"
 model = "gpt-5.4-mini"
+sandbox_mode = "workspace-write"
 
 developer_instructions = """
 あなたは test design 専任エージェントです。
