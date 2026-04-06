@@ -35,6 +35,7 @@ subtask worktree の path は `../notion-invoice-with-lambda-worktrees/issue-<�
 4. subtask 用テストと関連回帰テストを再実行する
 5. merge 前提の残課題がないか確認する
 6. subtask worktree の差分を issue worktree へ戻せる状態か確認する
+7. 確認で見つかったエラーは修正し、エラーが残ったまま閉じない
 
 ## ルール
 
@@ -45,3 +46,5 @@ subtask worktree の path は `../notion-invoice-with-lambda-worktrees/issue-<�
 - subtask commit は原則 `refs #<ISSUE_NO>` を使う
 - subtask がそのまま issue 完了を意味しない限り `fixes #<ISSUE_NO>` を使わない
 - commit message は `<prefix> #<ISSUE_NO> <要約>` + 空行 + `*` 箇条書きの形式に従う
+- 他の実装タスクと共有すべき遵守事項が増えた場合は `ai/tasks/readme.md` に記録する
+- 改善の結果、共通テンプレート変更が必要な場合だけ既存実装へ波及修正する

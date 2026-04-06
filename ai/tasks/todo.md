@@ -35,6 +35,7 @@
 - worktree path 規約を `../notion-invoice-with-lambda-worktrees/issue-<番号>` と `../notion-invoice-with-lambda-worktrees/issue-<番号>-<subtask-slug>` に固定する
 - commit message を `<refs|fixes> #<ISSUE_NO> <要約>` + 空行 + `*` 箇条書きに固定する
 - PR title / description のテンプレートを固定する
+- review に文法エラー確認と改善ルール、`ai/tasks/readme.md` への HTML 遵守事項記録ルールを追加する
 
 ## 2026-04-06 issue #1 実装
 

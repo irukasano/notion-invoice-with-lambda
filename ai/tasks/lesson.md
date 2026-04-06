@@ -16,3 +16,6 @@
 - commit 1 行目は `<refs|fixes> #<ISSUE_NO> <要約>` とし、issue 完了時だけ `fixes #<ISSUE_NO>` を使う
 - commit body は空行のあと `*` 箇条書きで `git diff` ベースに書く
 - PR title は `#<ISSUE_NO> <要約>`、PR description は `fixes #<ISSUE_NO>` + `## Summary` `## Changes` `## Comment` に固定する
+- review では HLD / security / performance に加えて文法エラーやビルド不能状態も確認する
+- 確認時にエラーがあれば修正し、エラーが残ったまま完了にしない
+- 他の実装タスクに共有しないと全体の統一が崩れる遵守事項は `ai/tasks/readme.md` に記録し、改善の結果、共通テンプレート変更が必要な場合だけ既存実装へ波及修正する

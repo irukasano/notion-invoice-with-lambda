@@ -60,6 +60,11 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 - `issue green` は、feature-level integration test を含めて green の状態を指す
 - feature-level integration test が最後まで red のままでも、subtask green の判定には使わない
 - review 指摘は `HLD` 違反、`security`、`performance` の順で優先する
+- 文法エラー、lint エラー、ビルド不能状態は review で必ず確認する
+- よりよい方向性が明確で issue スコープ内なら、積極的に改善を取り込む
+- 確認でエラーが出た場合は修正し、エラーが残ったまま完了にしない
+- 他の実装タスクに共有しないと全体の統一が崩れる遵守事項は `ai/tasks/readme.md` に記録する
+- 改善の結果、共通テンプレート変更が必要な場合だけ既存実装へ波及修正する
 
 ## Git / PR ルール
 
