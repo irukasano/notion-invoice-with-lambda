@@ -30,3 +30,19 @@
 - `config.toml` の構文検証を `python3` で試したが、環境が Python 3.9 かつ `tomli` 未導入のため TOML パーサ検証は未実施
 - 用語は `issue = GitHub issue`、`subtask = issue を分解した作業単位` に統一する
 - agents 側の `developer_instructions` に参照する skill を明記する
+
+## 2026-04-06 issue #1 実装
+
+- [x] `AGENTS.md` `docs/ARCHITECTURES.md` `docs/HLD.md` `ai/tasks/*.md` と issue #1 を確認する
+- [x] `issue/1` ブランチを作成する
+- [x] issue #1 の受け入れ条件を満たすテスト観点を整理する
+- [x] 必要最小限の実装差分でロガーと Lambda エントリの検証性を高める
+- [x] 関連テストを実行し、結果を review に記録する
+
+### Review
+
+- issue #1 は「Go Lambda の土台」「共通 JSON ロガー」「最小限 README」「ロガーユニットテスト」が対象
+- `docs/HLD.md` のうち今回の直接対象は共通構造とログ方針であり、請求業務ロジック自体はまだ対象外
+- `internal/app.Runner` を追加し、各 Lambda handler が concrete type に依存せずテスト可能な形にした
+- `cmd/*/main_test.go` で各 Lambda の開始・終了・失敗ログを検証し、`request_id` と `level` がエントリ全体で保たれることを確認した
+- `GOCACHE=$(pwd)/.cache/go-build GOMODCACHE=$(pwd)/.cache/gomod go test ./...` は成功した

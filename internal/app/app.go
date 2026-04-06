@@ -10,6 +10,11 @@ type App struct {
 	logger *logger.Logger
 }
 
+type Runner interface {
+	Run(ctx context.Context) error
+	Logger() *logger.Logger
+}
+
 func New(log *logger.Logger) *App {
 	return &App{logger: log}
 }

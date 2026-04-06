@@ -10,7 +10,7 @@ import (
 )
 
 type handler struct {
-	app *app.App
+	app app.Runner
 }
 
 func main() {
