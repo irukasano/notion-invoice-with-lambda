@@ -13,6 +13,7 @@
 - `final-only` 運用では commit だけで完了扱いにせず、最終 PR 作成までを完了条件として明記する
 - issue branch と subtask branch の並行作業は `git worktree` 前提で設計し、同一 worktree で branch を往復しない
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定し、issue は `issue-<番号>`、subtask は `issue-<番号>-<subtask-slug>` に統一する
+- `ai/tasks/todo.md` の計画は issue worktree 作成後に issue branch 側で記録する
 - commit 1 行目は `<refs|fixes> #<ISSUE_NO> <要約>` とし、issue 完了時だけ `fixes #<ISSUE_NO>` を使う
 - commit body は空行のあと `*` 箇条書きで `git diff` ベースに書く
 - PR title は `#<ISSUE_NO> <要約>`、PR description は `fixes #<ISSUE_NO>` + `## Summary` `## Changes` `## Comment` に固定する

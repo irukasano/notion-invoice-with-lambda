@@ -42,17 +42,19 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 
 ## 標準フロー
 
-1. `plan-issue` を使い、issue と HLD から subtask を定義する
-2. `create-feature-test` を使い、issue branch に HLD ベースの feature-level integration test を追加する
-3. `git worktree` を使い、`../notion-invoice-with-lambda-worktrees/issue-<番号>` と `../notion-invoice-with-lambda-worktrees/issue-<番号>-<subtask-slug>` を用意する
-4. 各 subtask で `create-subtask-test` を使って red テストを作る
-5. 各 subtask で `implement-from-test` を使って green にする
-6. 各 subtask で `review-subtask` を使って HLD 適合性・security・performance を確認する
-7. review 指摘のうちテスト化できるものは red テストへ戻し、実装とレビューを反復する
-8. 各 subtask で `finalize-subtask` を使い、branch を issue branch へ戻せる状態に整える
-9. subtask 完了後は subtask worktree 上で commit し、issue worktree へ取り込む
-10. 全 subtask 完了後に feature-level integration test と issue 全体レビューを実行する
-11. 問題がなければ issue branch で commit し、最後に 1 本だけ PR を作る
+1. まず `git worktree` を使い、`../notion-invoice-with-lambda-worktrees/issue-<番号>` の issue worktree を作る
+2. issue worktree 上で `ai/tasks/todo.md` に計画を記録する前提を整える
+3. `plan-issue` を使い、issue と HLD から subtask を定義する
+4. `create-feature-test` を使い、issue branch に HLD ベースの feature-level integration test を追加する
+5. subtask ごとに `../notion-invoice-with-lambda-worktrees/issue-<番号>-<subtask-slug>` の worktree を用意する
+6. 各 subtask で `create-subtask-test` を使って red テストを作る
+7. 各 subtask で `implement-from-test` を使って green にする
+8. 各 subtask で `review-subtask` を使って HLD 適合性・security・performance を確認する
+9. review 指摘のうちテスト化できるものは red テストへ戻し、実装とレビューを反復する
+10. 各 subtask で `finalize-subtask` を使い、branch を issue branch へ戻せる状態に整える
+11. subtask 完了後は subtask worktree 上で commit し、issue worktree へ取り込む
+12. 全 subtask 完了後に feature-level integration test と issue 全体レビューを実行する
+13. 問題がなければ issue branch で commit し、最後に 1 本だけ PR を作る
 
 ## 判定ルール
 

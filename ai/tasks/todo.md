@@ -33,6 +33,7 @@
 - `final-only` の完了条件を commit ではなく PR 作成完了までに修正する
 - issue branch / subtask branch の作業は `git worktree` 前提に修正する
 - worktree path 規約を `../notion-invoice-with-lambda-worktrees/issue-<番号>` と `../notion-invoice-with-lambda-worktrees/issue-<番号>-<subtask-slug>` に固定する
+- `ai/tasks/todo.md` の計画は issue worktree 作成後に記録する順序へ修正する
 - commit message を `<refs|fixes> #<ISSUE_NO> <要約>` + 空行 + `*` 箇条書きに固定する
 - PR title / description のテンプレートを固定する
 - review に文法エラー確認と改善ルール、`ai/tasks/readme.md` への HTML 遵守事項記録ルールを追加する
