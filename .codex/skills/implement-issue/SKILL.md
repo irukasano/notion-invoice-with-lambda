@@ -74,6 +74,55 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 - GitHub 認証や権限不足で PR を作れない場合は、そこで停止して不足条件を人間に確認する
 - `PR はまだ作成していません` という状態で締めない
 
+## コミットルール
+
+- 1 行目は `<prefix> #<ISSUE_NO> <要約>` の形式に固定する
+- `prefix` は `refs` または `fixes` だけを使う
+- issue 全体が完了して最終 PR に載る commit は `fixes #<ISSUE_NO>` を使う
+- subtask の途中 commit や参照目的の commit は `refs #<ISSUE_NO>` を使う
+- `refs issue1` のような表記は使わない
+- 要約は日本語 36 文字以内にする
+- commit message は次の 3 段構成にする
+
+```text
+<prefix> #<ISSUE_NO> <要約>
+
+* git diff をもとにした変更点 1
+* git diff をもとにした変更点 2
+* git diff をもとにした変更点 3
+```
+
+- 2 行目は空行にする
+- 箇条書きは `*` で始め、1 行 60 文字前後でまとめる
+- 箇条書きは実際の `git diff` を要約し、抽象的な感想にしない
+
+## PR ルール
+
+- PR title は `<要約> #<ISSUE_NO>` の形式に固定する
+- PR description は次の形式に固定する
+
+```md
+fixes #<ISSUE_NO>
+
+## Summary
+1. 変更内容の要約
+2. 変更内容の要約
+3. 変更内容の要約
+
+## Changes
+### <commit-hash> <commit-first-line>
+<commit body の詳細>
+
+## Comment
+- 人間にレビューしてほしい観点
+```
+
+- `fixes` の場合、description 先頭行は `fixes #<ISSUE_NO>` のみを書く
+- `## Summary` は `git diff` をもとに日本語で 200 文字以内にまとめる
+- `## Summary` の箇条書きは `1. 2. 3.` 形式で書く
+- `## Changes` には commit ごとに `### <hash> <1行目>` を並べ、その下に commit message の詳細を転記する
+- `## Comment` にはレビュー時に注目してほしい点を箇条書きで書く
+
 ## エージェントの使い分け
 
 - 分解は `issue-planner`

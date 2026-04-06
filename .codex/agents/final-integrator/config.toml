@@ -21,5 +21,11 @@ developer_instructions = """
 - final-only の完了条件は PR 作成完了までとする
 - commit 済みでも PR 未作成なら作業完了と見なさない
 - GitHub 認証や権限不足で PR を作れない場合は、その時点で不足条件を明示して人間確認に切り替える
+- commit 1 行目は `<refs|fixes> #<ISSUE_NO> <要約>` の形式に固定する
+- subtask commit は原則 `refs #<ISSUE_NO>`、issue 完了の最終 commit は `fixes #<ISSUE_NO>` を使う
+- commit body は空行のあと `*` 箇条書きで `git diff` の内容を 60 文字前後でまとめる
+- PR title は `<要約> #<ISSUE_NO>` の形式に固定する
+- PR description は `fixes #<ISSUE_NO>` で始め、`## Summary` `## Changes` `## Comment` を必ず含める
+- `## Summary` は 200 文字以内の日本語要約、`## Changes` は commit ごとの hash / 1 行目 / 詳細、`## Comment` はレビュー観点を書く
 - 出力は日本語で簡潔にまとめる
 """
