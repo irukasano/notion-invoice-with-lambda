@@ -53,3 +53,26 @@
 - `internal/app.Runner` を追加し、各 Lambda handler が concrete type に依存せずテスト可能な形にした
 - `cmd/*/main_test.go` で各 Lambda の開始・終了・失敗ログを検証し、`request_id` と `level` がエントリ全体で保たれることを確認した
 - `GOCACHE=$(pwd)/.cache/go-build GOMODCACHE=$(pwd)/.cache/gomod go test ./...` は成功した
+
+## 2026-04-06 issue #2 実装計画
+
+- [x] issue #2 の作業範囲を `Config` と Notion ドメイン型の最小整備に限定する
+- [x] `internal/config` 相当の設定読み込み・必須値検証を先に固める
+- [x] Transactions / Customers / Invoices / Cashflow の内部名に沿った最小 struct を追加する
+- [x] JSON マッピングと必須項目欠落時のエラー動作をテストで固定する
+- [x] issue 全体の feature-level integration test と review を実行する
+
+### Subtasks
+
+- [x] `config` - ENV, DB IDs, S3, SendGrid, pdftk パスを持つ `Config` を追加し、必須値欠落をエラーにする
+- [x] `notion-model` - Transactions / Customers / Invoices / Cashflow の最小 struct を追加し、内部名ベースの JSON マッピングを定義する
+- [x] `tests` - 有効値の JSON 逆変換と、必須項目欠落時の失敗を確認する issue-level テストを追加する
+
+### Review
+
+- issue #2 は後続モジュールが共通利用する土台の整備であり、業務ロジックはまだ入れない
+- `internal/config.Config` と `LoadFromLookup` を追加し、必須環境変数不足を `MissingEnvironmentError` で返すようにした
+- `PDFTK_PATH` は未設定時に `pdftk` を使うデフォルトにし、HLD のコマンド前提を保った
+- `internal/domain` に 4 DB 用の最小 Notion record struct と property struct を追加し、内部名 tag を固定した
+- `internal/acceptance/issue2_feature_test.go` と unit test により JSON round-trip と設定読み込みを固定した
+- `cd /home/user/workspaces/notion-invoice-with-lambda-worktrees/issue-2 && GOCACHE=/tmp/notion-invoice-issue2-go-build GOMODCACHE=/tmp/notion-invoice-issue2-gomod go test ./...` は成功した
