@@ -6,3 +6,5 @@
 - 2026-04-03: `.codex/skills/implement-from-test` を追加
 - `implement-from-test` は failing test を満たす最小実装に限定する
 - 2026-04-06: issue 全体の受け入れ条件は `create-feature-test`、subtask の red test は `create-subtask-test` に分離した
+- 2026-04-06 issue #2: `internal/config` は `LoadFromLookup` を公開し、テストから環境変数依存を切り離す
+- 2026-04-06 issue #2: `PDFTK_PATH` は未指定時に `pdftk` を使うデフォルトで扱い、環境差分を最小化する
