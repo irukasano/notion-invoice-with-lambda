@@ -89,3 +89,30 @@
 - worktree 済みの実行では branch 作成と worktree 移動を重ねない方針を `.codex/agents/issue-planner/config.toml` `.codex/agents/final-integrator/config.toml` `.codex/skills/plan-issue/SKILL.md` `.codex/skills/implement-issue/SKILL.md` `.codex/skills/finalize-subtask/SKILL.md` に反映した
 - PR title 規約を `fixes #<ISSUE_NO> <要約>` に統一し、`ai/tasks/lesson.md` に恒久ルールとして記録した
 - `git diff` と `rg` で旧ルールの取り残しがないことを確認した
+
+## 2026-04-07 branch naming rule
+
+- [x] 現在の branch 命名ルールの定義箇所を確認する
+- [x] issue / subtask branch の命名を `issue#<番号>` 系へ変更する
+- [x] 変更後の取り残し確認と Review 追記を行う
+
+### Review
+
+- branch 命名規則を `.codex/skills/implement-issue/SKILL.md` で `issue#<番号>` と `issue#<番号>/task/<slug>` に更新した
+- 恒久ルールとして `ai/tasks/lesson.md` に branch 命名規則を追記した
+- `rg` と `git diff` で運用ルール上の旧表記が残っていないことを確認した
+- `ai/tasks/todo.md` 内の `issue/1` は過去実績の記録であり、運用ルールではないため履歴として維持した
+
+## 2026-04-07 subtask commit rule
+
+- [x] subtask commit に関する現行ルールの定義箇所を確認する
+- [x] subtask 完了時に commit を必須化するルールを関連 skill / agent / lesson に反映する
+- [x] 変更後の差分確認と取り残し確認を行い、Review を追記する
+
+### Review
+
+- `implement-issue` の標準フローと commit ルールを更新し、各 subtask で最低 1 つの `refs #<ISSUE_NO>` commit を必須化した
+- `finalize-subtask` に commit 作成ステップを追加し、未 commit のまま subtask を閉じないことを明記した
+- `final-integrator` の agent 指示を更新し、subtask 完了時 commit 必須を親 orchestration と整合させた
+- `ai/tasks/lesson.md` に恒久ルールとして「subtask は完了時に必ず commit」を追記した
+- `rg` と `git diff` で関連ファイルの表記が一致していることを確認した

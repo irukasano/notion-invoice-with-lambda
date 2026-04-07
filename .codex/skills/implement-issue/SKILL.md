@@ -12,7 +12,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 
 - `issue#<番号>` を必須入力とする
 - 明示がない限り `pr_mode=final-only` とする
-- branch 命名は `issue/<番号>` と `issue/<番号>/task/<slug>` を使う
+- branch 命名は `issue#<番号>` と `issue#<番号>/task/<slug>` を使う
 - branch 作業は `git worktree` を前提とする
 - issue branch と各 subtask branch は別 worktree に分ける
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定する
@@ -52,7 +52,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 8. 各 subtask で `review-subtask` を使って HLD 適合性・security・performance を確認する
 9. review 指摘のうちテスト化できるものは red テストへ戻し、実装とレビューを反復する
 10. 各 subtask で `finalize-subtask` を使い、branch を issue branch へ戻せる状態に整える
-11. subtask 完了後は subtask worktree 上で commit し、issue worktree へ取り込む
+11. 各 subtask は完了時に subtask worktree 上で必ず commit し、その commit を issue worktree へ取り込む
 12. 全 subtask 完了後に feature-level integration test と issue 全体レビューを実行する
 13. 問題がなければ issue branch で commit し、最後に 1 本だけ PR を作る
 
@@ -77,7 +77,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 - issue branch は専用 worktree、各 subtask branch も専用 worktree を持つ前提で進める
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定する
 - path 名は issue 用が `issue-<番号>`、subtask 用が `issue-<番号>-<subtask-slug>` の kebab-case に固定する
-- `final-only` の完了条件は `issue/<番号> -> main` の PR 作成完了までとする
+- `final-only` の完了条件は `issue#<番号> -> main` の PR 作成完了までとする
 - commit 済みでも PR 未作成なら完了扱いにしない
 - GitHub 認証や権限不足で PR を作れない場合は、そこで停止して不足条件を人間に確認する
 - `PR はまだ作成していません` という状態で締めない
@@ -87,6 +87,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 - 1 行目は `<prefix> #<ISSUE_NO> <要約>` の形式に固定する
 - `prefix` は `refs` または `fixes` だけを使う
 - issue 全体が完了して最終 PR に載る commit は `fixes #<ISSUE_NO>` を使う
+- subtask は完了ごとに少なくとも 1 つ `refs #<ISSUE_NO>` commit を残す
 - subtask の途中 commit や参照目的の commit は `refs #<ISSUE_NO>` を使う
 - `refs issue1` のような表記は使わない
 - 要約は日本語 36 文字以内にする
