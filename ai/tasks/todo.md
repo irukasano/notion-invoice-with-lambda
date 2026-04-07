@@ -76,3 +76,16 @@
 - `internal/domain` に 4 DB 用の最小 Notion record struct と property struct を追加し、内部名 tag を固定した
 - `internal/acceptance/issue2_feature_test.go` と unit test により JSON round-trip と設定読み込みを固定した
 - `cd /home/user/workspaces/notion-invoice-with-lambda-worktrees/issue-2 && GOCACHE=/tmp/notion-invoice-issue2-go-build GOMODCACHE=/tmp/notion-invoice-issue2-gomod go test ./...` は成功した
+
+## 2026-04-07 agent 修正
+
+- [x] 既存の agent / skill にある worktree 運用と PR title 規約の記述を確認する
+- [x] worktree 配下での実行時は branch 作成と worktree 移動を省略する方針を関連ファイルへ反映する
+- [x] PR title を `fixes #<ISSUE_NO> <要約>` に統一する
+- [x] 差分確認と文言検証を行い、Review に結果を残す
+
+### Review
+
+- worktree 済みの実行では branch 作成と worktree 移動を重ねない方針を `.codex/agents/issue-planner/config.toml` `.codex/agents/final-integrator/config.toml` `.codex/skills/plan-issue/SKILL.md` `.codex/skills/implement-issue/SKILL.md` `.codex/skills/finalize-subtask/SKILL.md` に反映した
+- PR title 規約を `fixes #<ISSUE_NO> <要約>` に統一し、`ai/tasks/lesson.md` に恒久ルールとして記録した
+- `git diff` と `rg` で旧ルールの取り残しがないことを確認した

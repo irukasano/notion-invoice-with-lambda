@@ -42,6 +42,7 @@ subtask worktree の path は `../notion-invoice-with-lambda-worktrees/issue-<�
 - subtask 完了の判定は feature-level integration test ではなく subtask テストで行う
 - issue 全体の最終統合は親 skill `implement-issue` が担う
 - branch の切替で同一 worktree を使い回さず、subtask ごとの専用 worktree を維持する
+- すでに対象 issue / subtask の専用 worktree 配下にいる場合は branch 作成や worktree への移動を重ねて行わない
 - issue worktree は `../notion-invoice-with-lambda-worktrees/issue-<番号>` を使う
 - subtask commit は原則 `refs #<ISSUE_NO>` を使う
 - subtask がそのまま issue 完了を意味しない限り `fixes #<ISSUE_NO>` を使わない

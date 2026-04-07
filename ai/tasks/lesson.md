@@ -13,10 +13,11 @@
 - `final-only` 運用では commit だけで完了扱いにせず、最終 PR 作成までを完了条件として明記する
 - issue branch と subtask branch の並行作業は `git worktree` 前提で設計し、同一 worktree で branch を往復しない
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定し、issue は `issue-<番号>`、subtask は `issue-<番号>-<subtask-slug>` に統一する
-- `ai/tasks/todo.md` の計画は issue worktree 作成後に issue branch 側で記録する
+- `ai/tasks/todo.md` の計画は issue worktree の作成または既存 worktree の確認後に issue branch 側で記録する
+- すでに issue / subtask の専用 worktree 配下で作業している場合は、branch 作成や worktree への移動を重ねて行わない
 - commit 1 行目は `<refs|fixes> #<ISSUE_NO> <要約>` とし、issue 完了時だけ `fixes #<ISSUE_NO>` を使う
 - commit body は空行のあと `*` 箇条書きで `git diff` ベースに書く
-- PR title は `#<ISSUE_NO> <要約>`、PR description は `fixes #<ISSUE_NO>` + `## Summary` `## Changes` `## Comment` に固定する
+- PR title は `fixes #<ISSUE_NO> <要約>`、PR description は `fixes #<ISSUE_NO>` + `## Summary` `## Changes` `## Comment` に固定する
 - review では HLD / security / performance に加えて文法エラーやビルド不能状態も確認する
 - 確認時にエラーがあれば修正し、エラーが残ったまま完了にしない
 - 他の実装タスクに共有しないと全体の統一が崩れる遵守事項は `ai/tasks/readme.md` に記録し、改善の結果、共通テンプレート変更が必要な場合だけ既存実装へ波及修正する

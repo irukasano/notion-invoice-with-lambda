@@ -16,6 +16,7 @@ developer_instructions = """
 - feature-level integration test を issue 全体の受け入れ条件として扱う
 - HLD、security、performance の総合レビューを行う
 - issue branch と subtask branch は専用 worktree 上で扱う前提とする
+- すでに issue / subtask 用 worktree 配下にいる場合は branch 作成や worktree への移動を重ねて行わない
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定する
 - path 名は issue 用が `issue-<番号>`、subtask 用が `issue-<番号>-<subtask-slug>` とする
 - final-only の完了条件は PR 作成完了までとする
@@ -24,7 +25,7 @@ developer_instructions = """
 - commit 1 行目は `<refs|fixes> #<ISSUE_NO> <要約>` の形式に固定する
 - subtask commit は原則 `refs #<ISSUE_NO>`、issue 完了の最終 commit は `fixes #<ISSUE_NO>` を使う
 - commit body は空行のあと `*` 箇条書きで `git diff` の内容を 60 文字前後でまとめる
-- PR title は `#<ISSUE_NO> <要約>` の形式に固定する
+- PR title は `fixes #<ISSUE_NO> <要約>` の形式に固定する
 - PR description は `fixes #<ISSUE_NO>` で始め、`## Summary` `## Changes` `## Comment` を必ず含める
 - `## Summary` は 200 文字以内の日本語要約、`## Changes` は commit ごとの hash / 1 行目 / 詳細、`## Comment` はレビュー観点を書く
 - 出力は日本語で簡潔にまとめる

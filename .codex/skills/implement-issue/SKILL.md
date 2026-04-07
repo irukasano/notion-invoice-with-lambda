@@ -42,8 +42,8 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 
 ## 標準フロー
 
-1. まず `git worktree` を使い、`../notion-invoice-with-lambda-worktrees/issue-<番号>` の issue worktree を作る
-2. issue worktree 上で `ai/tasks/todo.md` に計画を記録する前提を整える
+1. まず現在地が対象 issue の専用 worktree 配下か判定し、そうでなければ `git worktree` を使って `../notion-invoice-with-lambda-worktrees/issue-<番号>` の issue worktree を作る
+2. issue worktree の作成または既存 worktree の確認後に `ai/tasks/todo.md` へ計画を記録する前提を整える
 3. `plan-issue` を使い、issue と HLD から subtask を定義する
 4. `create-feature-test` を使い、issue branch に HLD ベースの feature-level integration test を追加する
 5. subtask ごとに `../notion-invoice-with-lambda-worktrees/issue-<番号>-<subtask-slug>` の worktree を用意する
@@ -73,6 +73,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 - 標準は `final-only`
 - subtask ごとの PR は明示指示がある場合か、長期化・広範囲変更・早期レビュー需要がある場合だけ使う
 - branch の作成と切替は `git switch` の往復ではなく `git worktree add` を優先する
+- ただし、すでに対象 issue / subtask の専用 worktree 配下にいる場合は branch 作成や worktree への移動を重ねて行わない
 - issue branch は専用 worktree、各 subtask branch も専用 worktree を持つ前提で進める
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定する
 - path 名は issue 用が `issue-<番号>`、subtask 用が `issue-<番号>-<subtask-slug>` の kebab-case に固定する
@@ -105,7 +106,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 
 ## PR ルール
 
-- PR title は `#<ISSUE_NO> <要約>` の形式に固定する
+- PR title は `fixes #<ISSUE_NO> <要約>` の形式に固定する
 - PR description は次の形式に固定する
 
 ```md
