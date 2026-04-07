@@ -6,7 +6,7 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"net/http/httptest"
+	"strings"
 	"testing"
 
 	"github.com/irukasano/notion-invoice-with-lambda/internal/domain"
@@ -16,9 +16,9 @@ import (
 func TestIssue3Feature_NotionClient(t *testing.T) {
 	t.Run("query uses notion database endpoint and parses records", func(t *testing.T) {
 		var got requestCapture
-		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		client := newTestClient(fakeDoer(func(r *http.Request) (*http.Response, error) {
 			got = captureRequest(t, r)
-			writeJSON(t, w, map[string]any{
+			return encodeResponse(t, map[string]any{
 				"results": []map[string]any{{
 					"id": "tx-1",
 					"properties": map[string]any{
@@ -36,11 +36,8 @@ func TestIssue3Feature_NotionClient(t *testing.T) {
 				}},
 				"has_more":    false,
 				"next_cursor": nil,
-			})
+			}), nil
 		}))
-		defer server.Close()
-
-		client := newTestClient(t, server)
 
 		response, err := client.QueryTransactions(context.Background(), notion.QueryDatabaseRequest{
 			Filter: map[string]any{
@@ -89,11 +86,11 @@ func TestIssue3Feature_NotionClient(t *testing.T) {
 
 	t.Run("upsert maps create and update to pages endpoint", func(t *testing.T) {
 		var calls []requestCapture
-		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		client := newTestClient(fakeDoer(func(r *http.Request) (*http.Response, error) {
 			calls = append(calls, captureRequest(t, r))
 			switch len(calls) {
 			case 1:
-				writeJSON(t, w, map[string]any{
+				return encodeResponse(t, map[string]any{
 					"id": "customer-1",
 					"properties": map[string]any{
 						"title": map[string]any{
@@ -107,9 +104,9 @@ func TestIssue3Feature_NotionClient(t *testing.T) {
 							}},
 						},
 					},
-				})
+				}), nil
 			case 2:
-				writeJSON(t, w, map[string]any{
+				return encodeResponse(t, map[string]any{
 					"id": "invoice-1",
 					"properties": map[string]any{
 						"title": map[string]any{
@@ -123,14 +120,12 @@ func TestIssue3Feature_NotionClient(t *testing.T) {
 							}},
 						},
 					},
-				})
+				}), nil
 			default:
 				t.Fatalf("unexpected call count: %d", len(calls))
+				return nil, nil
 			}
 		}))
-		defer server.Close()
-
-		client := newTestClient(t, server)
 
 		customer, err := client.UpsertCustomer(context.Background(), notion.UpsertPageRequest[domain.CustomerProperties]{
 			Properties: domain.CustomerProperties{
@@ -179,13 +174,10 @@ func TestIssue3Feature_NotionClient(t *testing.T) {
 
 	t.Run("rate limit responses are classified", func(t *testing.T) {
 		requestCount := 0
-		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		client := newTestClient(fakeDoer(func(r *http.Request) (*http.Response, error) {
 			requestCount++
-			http.Error(w, `{"message":"rate limited"}`, http.StatusTooManyRequests)
+			return jsonResponse(http.StatusTooManyRequests, `{"message":"rate limited"}`), nil
 		}))
-		defer server.Close()
-
-		client := newTestClient(t, server)
 		_, err := client.QueryCashflow(context.Background(), notion.QueryDatabaseRequest{})
 		if err == nil {
 			t.Fatal("QueryCashflow returned nil error")
@@ -205,13 +197,10 @@ func TestIssue3Feature_NotionClient(t *testing.T) {
 
 	t.Run("5xx responses are classified", func(t *testing.T) {
 		requestCount := 0
-		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		client := newTestClient(fakeDoer(func(r *http.Request) (*http.Response, error) {
 			requestCount++
-			http.Error(w, `{"message":"server error"}`, http.StatusBadGateway)
+			return jsonResponse(http.StatusBadGateway, `{"message":"server error"}`), nil
 		}))
-		defer server.Close()
-
-		client := newTestClient(t, server)
 		_, err := client.QueryInvoices(context.Background(), notion.QueryDatabaseRequest{})
 		if err == nil {
 			t.Fatal("QueryInvoices returned nil error")
@@ -239,11 +228,9 @@ type requestCapture struct {
 	Body          map[string]any
 }
 
-func newTestClient(t *testing.T, server *httptest.Server) *notion.Client {
-	t.Helper()
-
+func newTestClient(httpClient notion.HTTPDoer) *notion.Client {
 	return notion.NewClient(notion.ClientConfig{
-		BaseURL: server.URL,
+		BaseURL: "https://api.notion.test",
 		Token:   "notion-secret",
 		DatabaseIDs: notion.DatabaseIDs{
 			Transactions: "tx-db",
@@ -251,7 +238,7 @@ func newTestClient(t *testing.T, server *httptest.Server) *notion.Client {
 			Invoices:     "invoices-db",
 			Cashflow:     "cashflow-db",
 		},
-	}, server.Client())
+	}, httpClient)
 }
 
 func captureRequest(t *testing.T, r *http.Request) requestCapture {
@@ -280,12 +267,30 @@ func captureRequest(t *testing.T, r *http.Request) requestCapture {
 	return captured
 }
 
-func writeJSON(t *testing.T, w http.ResponseWriter, body map[string]any) {
+type fakeDoer func(*http.Request) (*http.Response, error)
+
+func (f fakeDoer) Do(req *http.Request) (*http.Response, error) {
+	return f(req)
+}
+
+func encodeResponse(t *testing.T, body map[string]any) *http.Response {
 	t.Helper()
 
-	w.Header().Set("Content-Type", "application/json")
-	if err := json.NewEncoder(w).Encode(body); err != nil {
+	builder := &strings.Builder{}
+	if err := json.NewEncoder(builder).Encode(body); err != nil {
 		t.Fatalf("json.NewEncoder returned error: %v", err)
+	}
+
+	return jsonResponse(http.StatusOK, builder.String())
+}
+
+func jsonResponse(statusCode int, body string) *http.Response {
+	return &http.Response{
+		StatusCode: statusCode,
+		Body:       io.NopCloser(strings.NewReader(body)),
+		Header: http.Header{
+			"Content-Type": []string{"application/json"},
+		},
 	}
 }
 
