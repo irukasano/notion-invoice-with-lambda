@@ -12,7 +12,7 @@ description: Orchestrate end-to-end implementation for issue#N in this repositor
 
 - `issue#<番号>` を必須入力とする
 - 明示がない限り `pr_mode=final-only` とする
-- branch 命名は `issue#<番号>` と `issue#<番号>/task/<slug>` を使う
+- branch 命名は `issue#<番号>` と `issue#<番号>-task-<slug>` を使う
 - branch 作業は `git worktree` を前提とする
 - issue branch と各 subtask branch は別 worktree に分ける
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定する

@@ -13,7 +13,7 @@
 - `final-only` 運用では commit だけで完了扱いにせず、最終 PR 作成までを完了条件として明記する
 - issue branch と subtask branch の並行作業は `git worktree` 前提で設計し、同一 worktree で branch を往復しない
 - worktree root は `../notion-invoice-with-lambda-worktrees` に固定し、issue は `issue-<番号>`、subtask は `issue-<番号>-<subtask-slug>` に統一する
-- branch 命名は issue を `issue#<番号>`、subtask を `issue#<番号>/task/<slug>` に統一する
+- branch 命名は issue を `issue#<番号>`、subtask を `issue#<番号>-task-<slug>` に統一する
 - `ai/tasks/todo.md` の計画は issue worktree の作成または既存 worktree の確認後に issue branch 側で記録する
 - すでに issue / subtask の専用 worktree 配下で作業している場合は、branch 作成や worktree への移動を重ねて行わない
 - subtask は完了時に必ず `refs #<ISSUE_NO>` で commit し、未 commit のまま issue branch へ戻さない

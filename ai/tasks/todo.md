@@ -98,7 +98,7 @@
 
 ### Review
 
-- branch 命名規則を `.codex/skills/implement-issue/SKILL.md` で `issue#<番号>` と `issue#<番号>/task/<slug>` に更新した
+- branch 命名規則を `.codex/skills/implement-issue/SKILL.md` で `issue#<番号>` 系へ更新した
 - 恒久ルールとして `ai/tasks/lesson.md` に branch 命名規則を追記した
 - `rg` と `git diff` で運用ルール上の旧表記が残っていないことを確認した
 - `ai/tasks/todo.md` 内の `issue/1` は過去実績の記録であり、運用ルールではないため履歴として維持した
@@ -154,3 +154,15 @@
 - DB ごとの `Query*` / `Upsert*` wrapper を追加し、create は `/v1/pages` + `parent.database_id`、update は `/v1/pages/{id}` に変換する
 - feature-level test と unit test の `httptest` 依存を fake `HTTPDoer` へ置き換え、sandbox でも受け入れ条件を検証できるようにした
 - `env GOCACHE=/tmp/notion-issue3-all-go-build GOMODCACHE=/home/user/workspaces/notion-invoice-with-lambda/.cache/gomod GOPROXY=off go test ./...` は成功した
+
+## 2026-04-07 subtask branch naming flatten
+
+- [x] subtask branch 命名規則の定義箇所を確認する
+- [x] subtask branch 命名を `issue#<番号>-task-<slug>` へ更新する
+- [x] 変更後の取り残し確認と Review 追記を行う
+
+### Review
+
+- Git の ref 衝突を避けるため、subtask branch 命名をフラットな `issue#<番号>-task-<slug>` 形式へ切り替える方針に更新した
+- `.codex/skills/implement-issue/SKILL.md` と `ai/tasks/lesson.md` の branch 命名記述を新ルールへ合わせた
+- `rg` と `git diff` で現行ルール定義に旧表記が残っていないことを確認した
