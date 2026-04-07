@@ -82,22 +82,22 @@ AWS Lambda により請求書 PDF を自動生成し S3 へ保存し、
 
 ### 2.2.1 プロパティ一覧
 
-| 日本語名 | 内部名 | 属性 | 説明 | 更新主体 |
-|---------|--------|------|------|---------|
-| 件名 | `title` | Title | レコード名 | 人手 |
-| 顧客 | `customer` | Relation（Customers） | 売上明細のみ使用、支出・調整では空で可 | 人手 |
-| キャッシュ日 | `cash_date` | Date | お金が動く日（入金期日／支払日／調整日） | 人手 |
-| 金額 | `amount` | Number | 入金＋／支出−／残高調整＝その時点の残高 | 人手 |
-| 種別 | `category` | Select | `売上` / `支出` / `残高調整` / `期初残高` | 人手 |
-| キャッシュ対象 | `include_cashflow` | Checkbox | キャッシュフロー集計に含めるか | 人手 |
-| 明細内容 | `description` | Rich text | 請求書 PDF にも使う説明 | 人手 |
-| 数量 | `qty` | Number | 請求明細用 | 人手 |
-| 単価 | `unit_price` | Number | 請求明細用 | 人手 |
-| 請求金額 | `line_total` | Formula | `prop("qty") * prop("unit_price")` | Notion |
-| 請求予定日 | `billing_date` | Date | 請求書生成の基準日 | 人手 |
-| 入金／支払期日 | `payment_due` | Date | 売上：入金期日、支出：支払期日 | 人手 |
-| 請求 | `invoice` | Relation（Invoices） | 作成された請求レコードとの紐付け | Lambda |
-| ステータス | `status` | Status | `未請求 / 請求作成済 / 入金待ち / 入金済み` | Lambda（一部人手） |
+| 日本語名       | 内部名             | 属性                  | 説明                                        | 更新主体           |
+|----------------|--------------------|-----------------------|---------------------------------------------|--------------------|
+| 件名           | `title`            | Title                 | レコード名                                  | 人手               |
+| 顧客           | `customer`         | Relation（Customers） | 売上明細のみ使用、支出・調整では空で可      | 人手               |
+| キャッシュ日   | `cash_date`        | Date                  | お金が動く日（入金期日／支払日／調整日）    | 人手               |
+| 金額           | `amount`           | Number                | 入金＋／支出−／残高調整＝その時点の残高     | 人手               |
+| 種別           | `category`         | Select                | `売上` / `支出` / `残高調整` / `期初残高`   | 人手               |
+| キャッシュ対象 | `include_cashflow` | Checkbox              | キャッシュフロー集計に含めるか              | 人手               |
+| 明細内容       | `description`      | Rich text             | 請求書 PDF にも使う説明                     | 人手               |
+| 数量           | `qty`              | Number                | 請求明細用                                  | 人手               |
+| 単価           | `unit_price`       | Number                | 請求明細用                                  | 人手               |
+| 請求金額       | `line_total`       | Formula               | `prop("qty") * prop("unit_price")`          | Notion             |
+| 請求予定日     | `billing_date`     | Date                  | 請求書生成の基準日                          | 人手               |
+| 入金／支払期日 | `payment_due`      | Date                  | 売上：入金期日、支出：支払期日              | 人手               |
+| 請求           | `invoice`          | Relation（Invoices）  | 作成された請求レコードとの紐付け            | Lambda             |
+| ステータス     | `status`           | Status                | `未請求 / 請求作成済 / 入金待ち / 入金済み` | Lambda（一部人手） |
 
 - `status` は基本的に Lambda が `未請求 → 請求作成済` へ更新。
 - `入金待ち → 入金済み` などは、必要に応じて人手または別処理で管理（本バージョン対象外）。
@@ -110,14 +110,14 @@ AWS Lambda により請求書 PDF を自動生成し S3 へ保存し、
 
 ### 2.3.1 プロパティ一覧
 
-| 日本語名 | 内部名 | 属性 | 説明 | 更新主体 |
-|---------|--------|------|------|---------|
-| 顧客名 | `title` | Title | 表示名（請求PDFの宛名にも使用） | 人手 |
-| 請求メール宛先 | `billing_email` | Email / Text | メール送信先 | 人手 |
-| 請求書宛名 | `billing_to` | Rich text | PDFに印字する宛名（御中など） | 人手 |
-| 請求書送付方法 | `send_method` | Select | `メール` / `郵送` など | 人手 |
-| 請求書用コード | `customer_code` | Text | 英数2文字、請求番号生成に使用 | 人手 |
-| メモ | `memo` | Rich text | 任意メモ | 人手 |
+| 日本語名       | 内部名          | 属性         | 説明                            | 更新主体 |
+|----------------|-----------------|--------------|---------------------------------|----------|
+| 顧客名         | `title`         | Title        | 表示名（請求PDFの宛名にも使用） | 人手     |
+| 請求メール宛先 | `billing_email` | Email / Text | メール送信先                    | 人手     |
+| 請求書宛名     | `billing_to`    | Rich text    | PDFに印字する宛名（御中など）   | 人手     |
+| 請求書送付方法 | `send_method`   | Select       | `メール` / `郵送` など          | 人手     |
+| 請求書用コード | `customer_code` | Text         | 英数2文字、請求番号生成に使用   | 人手     |
+| メモ           | `memo`          | Rich text    | 任意メモ                        | 人手     |
 
 ---
 
@@ -127,18 +127,18 @@ AWS Lambda により請求書 PDF を自動生成し S3 へ保存し、
 
 ### 2.4.1 プロパティ一覧
 
-| 日本語名 | 内部名 | 属性 | 説明 | 更新主体 |
-|---------|--------|------|------|---------|
-| 請求番号 | `title` | Title | `S-<customer_code><YYYYMM>-NN` | Lambda |
-| 顧客 | `customer` | Relation（Customers） | 顧客情報 | Lambda |
-| 請求日 | `billing_date` | Date | 請求書上の発行日（＝グルーピング billing_date） | Lambda |
-| 請求対象月 | `billing_period` | Text | 例：`2025-12` | Lambda |
-| 請求額合計 | `total_amount` | Rollup | 明細の `line_total` の合計 | Notion |
-| 明細 | `items` | Relation（Transactions） | 請求書を構成する明細 | Lambda |
-| PDF URL | `pdf_url` | URL / Files | S3 URL またはファイル添付 | Lambda |
-| 承認ステータス | `approval_status` | Select / Status | `ドラフト / 承認済み` | 人手 |
-| メール送信ステータス | `email_status` | Select | `未送信 / 送信済み / エラー` | Lambda |
-| 入金期日 | `payment_due` | Rollup | 明細の `payment_due` の最大値 | Notion |
+| 日本語名             | 内部名            | 属性                     | 説明                                            | 更新主体 |
+|----------------------|-------------------|--------------------------|-------------------------------------------------|----------|
+| 請求番号             | `title`           | Title                    | `S-<customer_code><YYYYMM>-NN`                  | Lambda   |
+| 顧客                 | `customer`        | Relation（Customers）    | 顧客情報                                        | Lambda   |
+| 請求日               | `billing_date`    | Date                     | 請求書上の発行日（＝グルーピング billing_date） | Lambda   |
+| 請求対象月           | `billing_period`  | Text                     | 例：`2025-12`                                   | Lambda   |
+| 請求額合計           | `total_amount`    | Rollup                   | 明細の `line_total` の合計                      | Notion   |
+| 明細                 | `items`           | Relation（Transactions） | 請求書を構成する明細                            | Lambda   |
+| PDF URL              | `pdf_url`         | URL / Files              | S3 URL またはファイル添付                       | Lambda   |
+| 承認ステータス       | `approval_status` | Select / Status          | `ドラフト / 承認済み`                           | 人手     |
+| メール送信ステータス | `email_status`    | Select                   | `未送信 / 送信済み / エラー`                    | Lambda   |
+| 入金期日             | `payment_due`     | Rollup                   | 明細の `payment_due` の最大値                   | Notion   |
 
 - `approval_status` はデフォルト `ドラフト` で作成し、ユーザーが `承認済み` へ更新する。
 - メール送信処理は `approval_status=承認済み` かつ `email_status=未送信` を対象とする。
@@ -151,15 +151,15 @@ Lambda が日ごとに集計して書き込む、キャッシュ推移テーブ�
 
 ### 2.5.1 プロパティ一覧
 
-| 日本語名 | 内部名 | 属性 | 説明 | 更新主体 |
-|---------|--------|------|------|---------|
-| 日付 | `date` | Date | 1日1レコード | Lambda |
-| 繰越残高 | `opening_balance` | Number | その日の朝イチの残高 | Lambda |
-| 入金合計 | `cash_in` | Number | 当日の入金合計（include_cashflow=true） | Lambda |
-| 支出合計 | `cash_out` | Number | 当日の支出合計（include_cashflow=true） | Lambda |
-| 純増減 | `net_change` | Number | `cash_in - cash_out` | Lambda |
-| 本日残高 | `closing_balance` | Number | 当日の終わりの残高 | Lambda |
-| 危険フラグ | `risk_flag` | Formula | しきい値未満なら⚠️など | Notion |
+| 日本語名   | 内部名            | 属性    | 説明                                    | 更新主体 |
+|------------|-------------------|---------|-----------------------------------------|----------|
+| 日付       | `date`            | Date    | 1日1レコード                            | Lambda   |
+| 繰越残高   | `opening_balance` | Number  | その日の朝イチの残高                    | Lambda   |
+| 入金合計   | `cash_in`         | Number  | 当日の入金合計（include_cashflow=true） | Lambda   |
+| 支出合計   | `cash_out`        | Number  | 当日の支出合計（include_cashflow=true） | Lambda   |
+| 純増減     | `net_change`      | Number  | `cash_in - cash_out`                    | Lambda   |
+| 本日残高   | `closing_balance` | Number  | 当日の終わりの残高                      | Lambda   |
+| 危険フラグ | `risk_flag`       | Formula | しきい値未満なら⚠️など                   | Notion   |
 
 ---
 
