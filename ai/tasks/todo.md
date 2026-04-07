@@ -116,3 +116,41 @@
 - `final-integrator` の agent 指示を更新し、subtask 完了時 commit 必須を親 orchestration と整合させた
 - `ai/tasks/lesson.md` に恒久ルールとして「subtask は完了時に必ず commit」を追記した
 - `rg` と `git diff` で関連ファイルの表記が一致していることを確認した
+
+## 2026-04-07 issue #3 実装計画
+
+- [x] `AGENTS.md` `docs/ARCHITECTURES.md` `docs/HLD.md` `ai/tasks/*.md` と issue #3 を確認する
+- [x] `issue#3` 用 worktree `/home/user/workspaces/notion-invoice-with-lambda-worktrees/issue-3` を作成する
+- [x] issue #3 の feature-level integration test を追加し、受け入れ条件を固定する
+- [x] `http-core` subtask で Notion HTTP クライアント基盤と 429/5xx エラー分類を追加する
+- [x] `database-ops` subtask で Transactions / Customers / Invoices / Cashflow の Query / Upsert API を追加する
+- [x] subtask ごとの review と commit を完了し、issue branch に取り込む
+- [ ] issue 全体テスト、最終 review、最終 commit、PR 作成を行う
+
+### Subtasks
+
+- [x] `notion-client-core` - 共通 request 生成、認証ヘッダ、レスポンス処理、429 / 5xx / 4xx の分類を固定する
+- [x] `notion-query-upsert` - DB ごとの Query / Upsert を DTO から HTTP へ変換し、Notion の endpoint と payload を固定する
+- [x] `notion-client-tests` - 正常系、429、5xx、DTO→HTTP リクエスト変換を feature-level test で固定する
+
+### Acceptance
+
+- [x] 正常系で Notion Query / Upsert が想定 endpoint、method、header、body で呼ばれる
+- [x] 429 は rate limit エラーとして識別され、5xx は server error として識別される
+- [x] 正常 / 異常レスポンスで API の返り値とエラーが安定する
+
+### Worktree 方針
+
+- issue worktree は `/home/user/workspaces/notion-invoice-with-lambda-worktrees/issue-3` を使用する
+- subtask worktree は `/home/user/workspaces/notion-invoice-with-lambda-worktrees/issue-3-<subtask-slug>` を使用する
+- issue worktree と subtask worktree は役割を分離し、同一 worktree の branch 往復はしない
+
+### Review
+
+- issue #3 は Notion API の薄い HTTP 層であり、業務ロジックや再試行戦略はこの issue に含めない
+- HLD 4.7 の「429 / 5xx はログ出力して即終了、retry しない」を支えるエラー種別化を土台として実装する
+- Query / Upsert は issue 記述を優先し、Transactions / Customers / Invoices / Cashflow ごとの最小 API に留める
+- `internal/notion.Client` に共通 HTTP 実行、Authorization / Notion-Version / Content-Type ヘッダ、429 / 5xx / 4xx 分類を追加した
+- DB ごとの `Query*` / `Upsert*` wrapper を追加し、create は `/v1/pages` + `parent.database_id`、update は `/v1/pages/{id}` に変換する
+- feature-level test と unit test の `httptest` 依存を fake `HTTPDoer` へ置き換え、sandbox でも受け入れ条件を検証できるようにした
+- `env GOCACHE=/tmp/notion-issue3-all-go-build GOMODCACHE=/home/user/workspaces/notion-invoice-with-lambda/.cache/gomod GOPROXY=off go test ./...` は成功した
