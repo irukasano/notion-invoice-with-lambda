@@ -4,8 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
-	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -52,13 +53,14 @@ func TestNewJSONRequestSetsHeaders(t *testing.T) {
 }
 
 func TestDoJSONDecodesResponse(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "application/json")
-		_ = json.NewEncoder(w).Encode(map[string]string{"id": "page-1"})
-	}))
-	defer server.Close()
+	client := NewClient(ClientConfig{BaseURL: "https://api.notion.test"}, fakeDoer(func(req *http.Request) (*http.Response, error) {
+		recorder := &strings.Builder{}
+		if err := json.NewEncoder(recorder).Encode(map[string]string{"id": "page-1"}); err != nil {
+			t.Fatalf("json.NewEncoder returned error: %v", err)
+		}
 
-	client := NewClient(ClientConfig{BaseURL: server.URL}, server.Client())
+		return jsonResponse(http.StatusOK, recorder.String()), nil
+	}))
 	req, err := client.newJSONRequest(context.Background(), http.MethodGet, "/v1/pages/page-1", nil)
 	if err != nil {
 		t.Fatalf("newJSONRequest returned error: %v", err)
@@ -77,9 +79,9 @@ func TestDoJSONDecodesResponse(t *testing.T) {
 
 func TestDoJSONClassifiesErrors(t *testing.T) {
 	tests := []struct {
-		name     string
-		status   int
-		assert   func(*testing.T, error)
+		name   string
+		status int
+		assert func(*testing.T, error)
 	}{
 		{
 			name:   "rate limit",
@@ -121,12 +123,9 @@ func TestDoJSONClassifiesErrors(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				http.Error(w, "boom", tt.status)
+			client := NewClient(ClientConfig{BaseURL: "https://api.notion.test"}, fakeDoer(func(req *http.Request) (*http.Response, error) {
+				return jsonResponse(tt.status, "boom"), nil
 			}))
-			defer server.Close()
-
-			client := NewClient(ClientConfig{BaseURL: server.URL}, server.Client())
 			req, err := client.newJSONRequest(context.Background(), http.MethodGet, "/v1/test", nil)
 			if err != nil {
 				t.Fatalf("newJSONRequest returned error: %v", err)
@@ -138,5 +137,21 @@ func TestDoJSONClassifiesErrors(t *testing.T) {
 			}
 			tt.assert(t, err)
 		})
+	}
+}
+
+type fakeDoer func(*http.Request) (*http.Response, error)
+
+func (f fakeDoer) Do(req *http.Request) (*http.Response, error) {
+	return f(req)
+}
+
+func jsonResponse(statusCode int, body string) *http.Response {
+	return &http.Response{
+		StatusCode: statusCode,
+		Body:       io.NopCloser(strings.NewReader(body)),
+		Header: http.Header{
+			"Content-Type": []string{"application/json"},
+		},
 	}
 }
