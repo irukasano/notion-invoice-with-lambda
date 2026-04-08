@@ -166,3 +166,17 @@
 - Git の ref 衝突を避けるため、subtask branch 命名をフラットな `issue#<番号>-task-<slug>` 形式へ切り替える方針に更新した
 - `.codex/skills/implement-issue/SKILL.md` と `ai/tasks/lesson.md` の branch 命名記述を新ルールへ合わせた
 - `rg` と `git diff` で現行ルール定義に旧表記が残っていないことを確認した
+
+## 2026-04-08 GitHub 認証規則の追加
+
+- [x] 既存 `AGENTS.md` と `ai/tasks/*.md` の責務を確認する
+- [x] GitHub 認証と秘密情報出力の禁止事項を repo 共通ルールとして整理する
+- [x] `AGENTS.md` に追加する文言を反映する
+- [x] 差分を確認し、配置先と運用意図をレビューに記録する
+
+### Review
+
+- `AGENTS.md` に GitHub 認証と秘密情報の取り扱いをまとめる新セクションを追加した
+- 取得自体を一律禁止するのではなく、必要最小限の参照は許容しつつ、標準出力・ログ・応答への生値出力を禁止する方針に整理した
+- `gh auth status` を唯一の認証状態確認手段として明示し、`gh auth token`、token/cookie/header の表示、`env` 系や `git credential` 系の secrets 可視化利用を禁止した
+- 認証失敗時は secrets を出さずに停止すること、マスク不能な場合はコマンド自体を実行しないことを明記した

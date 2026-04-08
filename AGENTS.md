@@ -62,3 +62,15 @@
   - 要約は 36 文字以内の日本語
   - 箇条書きは 60 文字以内で改行
 - 大規模変更は複数コミット・複数 PR に分割する。
+
+---
+
+## 7. GitHub 認証・秘密情報の取り扱い
+
+- Git の HTTPS 認証は `gh` の credential helper を用いる。事前設定は `gh auth setup-git` を前提とする。
+- GitHub の認証状態確認は `gh auth status` のみ許可する。
+- `gh auth token` の実行を禁止する。
+- `GH_TOKEN` `GITHUB_TOKEN` `Authorization` header `cookie` などの秘密情報は、取得・参照が必要な場合でも標準出力、ログ、レスポンス本文、レビューコメントへ生値のまま出力してはならない。
+- 秘密情報を扱う場合は、可視化を伴わない最小限の利用に限定し、表示が避けられない操作は実行しない。
+- `printenv` `env` `echo` `git credential` 系コマンドを、secrets の可視化や抽出を目的として使うことを禁止する。
+- 認証や通信に失敗した場合は、秘密情報を追加表示せず、その時点で停止する。

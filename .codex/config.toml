@@ -1,0 +1,23 @@
+sandbox_mode = "workspace-write"
+approval_policy = "never"
+writable_roots = [
+  ".git",
+  ".codex",
+  "/home/user/workspaces/notion-invoice-with-lambda/.git/"
+]
+
+[sandbox_workspace_write]
+network_access = true
+
+[mcp_servers.gh.tools.gh_issue_view]
+approval_policy = "never"
+
+[mcp_servers.gh.tools.gh_auth_status]
+approval_policy = "never"
+
+[mcp_servers.gh.tools.gh_pr_create]
+approval_policy = "never"
+
+[mcp_servers.gh.tools.gh_repo_view]
+approval_policy = "never"
+

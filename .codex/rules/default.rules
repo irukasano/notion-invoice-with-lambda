@@ -1,0 +1,45 @@
+prefix_rule(
+    pattern=["git", "add"],
+    decision="allow",
+    justification="Allow git add outside sandbox for git worktree metadata writes",
+    match=[
+        "git add .",
+        "git add ai/tasks/todo.md",
+        "git add internal/s3/client.go",
+        "git add internal/s3/key.go",
+    ],
+)
+
+prefix_rule(
+    pattern=["git", "commit"],
+    decision="allow",
+    justification="Allow git commit outside sandbox for git worktree metadata writes",
+    match=[
+        "git commit -m test",
+        "git commit --allow-empty -m sandbox",
+        "git commit -m \"fixes #4 S3薄層とキー生成を追加\"",
+        "git commit -m \"refs #4 S3 キー生成を追加\"",
+    ],
+)
+
+prefix_rule(
+    pattern=["git", "switch"],
+    decision="allow",
+    justification="Allow git switch outside sandbox for git worktree branch updates",
+    match=[
+        "git switch issue#4",
+        "git switch -c issue#4-pr develop",
+    ],
+)
+
+prefix_rule(
+    pattern=["git", "push"],
+    decision="allow",
+    justification="Allow git push outside sandbox for publishing worktree branches",
+    match=[
+        "git push -u origin issue#4",
+        "git push -u origin issue#4-pr",
+        "git push -u origin feature/dev#4",
+    ],
+)
+
