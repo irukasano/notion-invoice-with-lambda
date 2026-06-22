@@ -180,3 +180,36 @@
 - 取得自体を一律禁止するのではなく、必要最小限の参照は許容しつつ、標準出力・ログ・応答への生値出力を禁止する方針に整理した
 - `gh auth status` を唯一の認証状態確認手段として明示し、`gh auth token`、token/cookie/header の表示、`env` 系や `git credential` 系の secrets 可視化利用を禁止した
 - 認証失敗時は secrets を出さずに停止すること、マスク不能な場合はコマンド自体を実行しないことを明記した
+
+## 2026-04-08 issue #5 実装計画
+
+- [x] `AGENTS.md` `docs/ARCHITECTURES.md` `docs/HLD.md` `ai/tasks/*.md` と issue #5 を確認する
+- [x] `feature/dev#5` の専用 worktree 上で進める前提を確認する
+- [x] issue #5 の feature-level integration test を追加し、受け入れ条件を固定する
+- [x] `sendgrid-request` subtask で `/mail/send` の request 組み立てと PDF 添付 BASE64 化を実装する
+- [x] `recipient-validation` subtask で宛先バリデーションを追加する
+- [x] `error-classification` subtask で 4xx / 5xx / 429 の異常応答種別化を追加する
+- [ ] issue 全体テスト、最終 review、最終 commit、PR 作成を行う
+
+### Subtasks
+
+- [x] `sendgrid-request` - `POST /mail/send` の URL、ヘッダ、JSON payload を HLD 5.2 に合わせて固定する
+- [x] `recipient-validation` - `billing_email` の空値と不正形式を送信前に弾く
+- [x] `error-classification` - SendGrid の異常応答を呼び出し側で判定しやすいエラー型へ分類する
+
+### Acceptance
+
+- [x] `SENDGRID_BASE_URL + /mail/send` に `POST` し、`Authorization` と `Content-Type: application/json` を付ける
+- [x] 件名、本文、送信元、宛先、PDF 添付 BASE64 が request body に含まれる
+- [x] `billing_email` が空または不正な場合は HTTP 送信前にバリデーションエラーを返す
+- [x] 429 / 4xx / 5xx の応答を別種のエラーとして返し、再試行前提の曖昧な失敗にしない
+
+### Review
+
+- issue #5 のスコープは SendGrid 薄層の request 組み立て、宛先バリデーション、異常応答種別化に限定する
+- HLD 5.2.2 の本文形式は text / HTML のいずれか許容のため、最小差分として `text/plain` を採用する
+- Invoices 抽出、S3 取得、`email_status` 更新は issue #5 の外側に置き、この issue では固定しない
+- `internal/sendgrid.Client` を追加し、`/mail/send` への JSON request 組み立て、Bearer 認証ヘッダ付与、PDF 添付の BASE64 化を実装した
+- `ValidationError` と `RateLimitError` / `ClientError` / `ServerError` を追加し、宛先検証と SendGrid 応答の種別化を呼び出し側で判定できる形にした
+- `internal/acceptance/issue5_feature_test.go` と `internal/sendgrid/client_test.go` で正常系、宛先エラー、4xx / 5xx / 429 を固定した
+- `GOCACHE=/tmp/notion-issue5-go-build GOMODCACHE=/tmp/notion-issue5-gomod go test ./internal/acceptance ./internal/sendgrid` は成功した
